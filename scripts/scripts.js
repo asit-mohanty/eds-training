@@ -68,6 +68,17 @@ export function decorateMain(main) {
 }
 
 /**
+ * Returns the current href, or constructs it from the parent if in 'about:srcdoc'.
+ * @returns {string}
+ */
+export function getHref() {
+  if (window.location.href !== 'about:srcdoc') return window.location.href;
+  const { location: parentLocation } = window.parent;
+  const urlParams = new URLSearchParams(parentLocation.search);
+  return `${parentLocation.origin}${urlParams.get('path')}`;
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -75,6 +86,13 @@ async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
+
+  const path = getHref();
+  if (path.includes('/ar/')) {
+    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl';
+  }
+
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
