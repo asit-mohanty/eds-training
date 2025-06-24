@@ -68,10 +68,8 @@ export function decorateMain(main) {
 }
 
 /**
- * Retrieves the current window's href. If the window is an iframe with 'about:srcdoc' as its URL,
- * it constructs the href using the parent window's origin and a 'path' query parameter from the parent's search string.
- *
- * @returns {string} The current window's href or a constructed href based on the parent window's location.
+ * Returns the current href, or constructs it from the parent if in 'about:srcdoc'.
+ * @returns {string}
  */
 export function getHref() {
   if (window.location.href !== 'about:srcdoc') return window.location.href;
@@ -90,11 +88,11 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
 
   const path = getHref();
-   if (path.includes('/ar/')) {
+  if (path.includes('/ar/')) {
     document.documentElement.lang = 'ar';
     document.documentElement.dir = 'rtl';
   }
-  
+
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
